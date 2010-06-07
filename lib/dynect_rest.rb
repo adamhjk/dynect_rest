@@ -72,7 +72,7 @@ class DynectRest
   #
   # See: https://manage.dynect.net/help/docs/api2/rest/resources/Zone.html
   #
-  # @params [String] The zone to fetch - if one is provided when instantiated, we use that.
+  # @param [String] The zone to fetch - if one is provided when instantiated, we use that.
   # @return [Hash] The dynect API response
   def get_zone(zone=nil)  
     zone ||= @zone
@@ -83,7 +83,7 @@ class DynectRest
   #
   # See: https://manage.dynect.net/help/docs/api2/rest/resources/Zone.html
   #
-  # @params [String] The zone to publish - if one is provided when instantiated, we use that.
+  # @param [String] The zone to publish - if one is provided when instantiated, we use that.
   # @return [Hash] The dynect API response
   def publish(zone=nil)
     zone ||= @zone 
@@ -94,7 +94,7 @@ class DynectRest
   #
   # See: https://manage.dynect.net/help/docs/api2/rest/resources/Zone.html
   #
-  # @params [String] The zone to freeze - if one is provided when instantiated, we use that.
+  # @param [String] The zone to freeze - if one is provided when instantiated, we use that.
   # @return [Hash] The dynect API response
   def freeze(zone=nil)
     zone ||= @zone 
@@ -105,7 +105,7 @@ class DynectRest
   #
   # See: https://manage.dynect.net/help/docs/api2/rest/resources/Zone.html
   #
-  # @params [String] The zone to thaw - if one is provided when instantiated, we use that.
+  # @param [String] The zone to thaw - if one is provided when instantiated, we use that.
   # @return [Hash] The dynect API response
   def thaw(zone=nil)
     zone ||= @zone 
@@ -125,8 +125,8 @@ class DynectRest
   #
   # https://manage.dynect.net/help/docs/api2/rest/resources/
   #
-  # @params [String] The partial path to GET - for example, 'User' or 'Zone'.
-  # @params [Hash] Additional HTTP headers
+  # @param [String] The partial path to GET - for example, 'User' or 'Zone'.
+  # @param [Hash] Additional HTTP headers
   def get(path_part, additional_headers = {}, &block)
     api_request { @rest[path_part].get(additional_headers, &block) }
   end
@@ -135,8 +135,8 @@ class DynectRest
   #
   # https://manage.dynect.net/help/docs/api2/rest/resources/
   #
-  # @params [String] The partial path to DELETE - for example, 'User' or 'Zone'.
-  # @params [Hash] Additional HTTP headers
+  # @param [String] The partial path to DELETE - for example, 'User' or 'Zone'.
+  # @param [Hash] Additional HTTP headers
   def delete(path_part, additional_headers = {}, &block)
     api_request { @rest[path_part].delete(additional_headers, &block) }
   end
@@ -147,9 +147,9 @@ class DynectRest
   #
   # Read the API documentation, and submit the proper data structure from here.
   #
-  # @params [String] The partial path to POST - for example, 'User' or 'Zone'.
-  # @params [Hash] The data structure to submit as the body, is automatically turned to JSON.
-  # @params [Hash] Additional HTTP headers
+  # @param [String] The partial path to POST - for example, 'User' or 'Zone'.
+  # @param [Hash] The data structure to submit as the body, is automatically turned to JSON.
+  # @param [Hash] Additional HTTP headers
   def post(path_part, payload, additional_headers = {}, &block)
     api_request { @rest[path_part].post(payload.to_json, additional_headers, &block) }
   end
@@ -160,9 +160,9 @@ class DynectRest
   #
   # Read the API documentation, and submit the proper data structure from here.
   #
-  # @params [String] The partial path to PUT - for example, 'User' or 'Zone'.
-  # @params [Hash] The data structure to submit as the body, is automatically turned to JSON.
-  # @params [Hash] Additional HTTP headers
+  # @param [String] The partial path to PUT - for example, 'User' or 'Zone'.
+  # @param [Hash] The data structure to submit as the body, is automatically turned to JSON.
+  # @param [Hash] Additional HTTP headers
   def put(path_part, payload, additional_headers = {}, &block)
     api_request { @rest[path_part].put(payload.to_json, additional_headers, &block) }
   end

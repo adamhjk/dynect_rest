@@ -44,4 +44,4 @@ If you are a Dynect customer.
 
 == Copyright
 
-Copyright (c) 2010 Adam Jacob. See LICENSE for details.
+Copyright (c) 2010 Opscode, Inc. See LICENSE for details.
