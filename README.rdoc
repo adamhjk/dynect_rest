@@ -1,13 +1,42 @@
 = dynect-rest
 
-Description goes here.
+Interact with the Dynect REST API.
+
+== Resource Records
+
+Since this is 90% of what you'll be doing, we make it easy.  
+
+  dyn = DynectRest.new("CUSTOMER", "USERNAME", "PASSWORD", "ZONE")
+  dyn.a.fqdn("sunshine.example.com").ttl(3600).address("192.168.1.1").save
+  dyn.cname.fqdn("something.example.com").cname("ec2-10-10-10-10.amazonaws.com").save
+  dyn.publish
+
+Will add an A record and a CNAME.  You can use the chained method syntax for every resource record - we map unknown methods to the resource data you make in the call.
+
+== Everything else
+
+We wrap up the lower-level functionality of the API, so you can focus on just making the calls.  For example, to get a list of contacts:
+
+  dyn = DynectRest.new("CUSTOMER", "USERNAME", "PASSWORD", "ZONE")
+  dyn.get('Contact')
+
+To create a new contact:
+
+  dyn = DynectRest.new("CUSTOMER", "USERNAME", "PASSWORD", "ZONE")
+  dyn.post('Contact', { "first_name" => "Bobo", "last_name" => "Clown", "organization" => 'The Circus', "email" => "bobo@example.com" })
+ 
+== Use the API docs
+
+For more - you should be able to find the latest at:
+
+  https://manage.dynect.net/help/docs/api2/rest/resources/
+
+If you are a Dynect customer.
 
 == Note on Patches/Pull Requests
  
 * Fork the project.
 * Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
 * Commit, do not mess with rakefile, version, or history.
   (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
