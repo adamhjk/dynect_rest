@@ -6,6 +6,7 @@ Interact with the Dynect REST API.
 
 Since this is 90% of what you'll be doing, we make it easy.  
 
+  require 'dynect_rest'
   dyn = DynectRest.new("CUSTOMER", "USERNAME", "PASSWORD", "ZONE")
   dyn.a.fqdn("sunshine.example.com").ttl(3600).address("192.168.1.1").save
   dyn.cname.fqdn("something.example.com").cname("ec2-10-10-10-10.amazonaws.com").save
