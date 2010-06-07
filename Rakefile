@@ -4,7 +4,7 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "dynect-rest"
+    gem.name = "dynect_rest"
     gem.summary = %Q{Dynect REST API library}
     gem.description = %Q{Use the Dynect services REST API}
     gem.email = "adam@opscode.com"
