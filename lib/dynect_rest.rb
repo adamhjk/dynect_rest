@@ -173,6 +173,9 @@ class DynectRest
       response = block.call
       response.body
     rescue RestClient::Exception => e
+      if e.http_code == 307
+        get(e.response)
+      end
       e.response
     end
     parse_response(JSON.parse(response_body))

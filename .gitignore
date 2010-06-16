@@ -19,5 +19,5 @@ rdoc
 pkg
 doc
 .yardoc
-
+*.gemspec
 ## PROJECT::SPECIFIC
