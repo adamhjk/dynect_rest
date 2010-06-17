@@ -69,7 +69,14 @@ class DynectRest
           record =~ /^#{resource_path(:full)}\/#{fqdn}\/(\d+)$/
           raw_rr_list << self.get(fqdn, $1)
         end
-        raw_rr_list.length == 1 ? raw_rr_list[0] : raw_rr_list
+        case raw_rr_list.length
+        when 0
+          raise DynectRest::Exceptions::RequestFailed, "Cannot find #{record_type} record for #{fqdn}"
+        when 1
+          raw_rr_list[0]
+        else
+          raw_rr_list
+        end
       end
     end
 
@@ -85,7 +92,7 @@ class DynectRest
 
     def save(replace=false)
       if record_id
-        @dynect.put("#{resource_path}/#{@fqdn}/#{@record_id}", self)
+        @dynect.put("#{resource_path}/#{@fqdn}/#{record_id}", self)
       else
         if replace == true || replace == :replace
           @dynect.put("#{resource_path}/#{@fqdn}", self)

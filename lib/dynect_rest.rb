@@ -173,6 +173,7 @@ class DynectRest
       response = block.call
       response.body
     rescue RestClient::Exception => e
+      puts "I have #{e.inspect} with #{e.http_code}"
       if e.http_code == 307
         get(e.response)
       end
