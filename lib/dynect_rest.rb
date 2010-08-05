@@ -109,7 +109,7 @@ class DynectRest
   # @return [Hash] The dynect API response
   def thaw(zone=nil)
     zone ||= @zone 
-    put("Zone/#{zone}", { "freeze" => true })
+    put("Zone/#{zone}", { "thaw" => true })
   end
 
   ##
