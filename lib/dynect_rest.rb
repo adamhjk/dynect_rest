@@ -22,6 +22,7 @@ class DynectRest
   require 'dynect_rest/resource'
   require 'rest_client'
   require 'json'
+  require 'active_support/inflector'
 
   attr_accessor :customer_name, :user_name, :password, :rest, :zone
 
@@ -115,9 +116,15 @@ class DynectRest
   ##
   # Resource Records
   ##
-  %w{AAAA A CNAME DNSKEY DS KEY LOC MX NS PTR RP SOA SRV TXT}.each do |resource_type|
-    define_method resource_type.downcase.to_sym do
-      DynectRest::Resource.new(self, resource_type, @zone)
+  %w{AAAA A CNAME DNSKEY DS KEY LOC MX NS PTR RP SOA SRV TXT}.each do |record_type|
+    define_method record_type.underscore do
+      DynectRest::Resource.new(self,"#{record_type}Record" , @zone)
+    end
+  end
+
+  %w{Node NodeList}.each do |type|
+    define_method type.underscore do
+      DynectRest::Resource.new(self,"#{type}" , @zone)
     end
   end
 
@@ -128,6 +135,7 @@ class DynectRest
   # @param [String] The partial path to GET - for example, 'User' or 'Zone'.
   # @param [Hash] Additional HTTP headers
   def get(path_part, additional_headers = {}, &block)
+    puts "GET #{path_part}"
     api_request { @rest[path_part].get(additional_headers, &block) }
   end
 
@@ -138,6 +146,7 @@ class DynectRest
   # @param [String] The partial path to DELETE - for example, 'User' or 'Zone'.
   # @param [Hash] Additional HTTP headers
   def delete(path_part, additional_headers = {}, &block)
+    puts "DELETE #{path_part}"
     api_request { @rest[path_part].delete(additional_headers, &block) }
   end
 

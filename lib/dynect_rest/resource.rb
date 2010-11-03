@@ -53,22 +53,33 @@ class DynectRest
 
     def resource_path(full=false)
       if (full == true || full == :full) 
-        "/REST/#{@record_type}Record/#{@zone}"
+        "/REST/#{@record_type}/#{@zone}"
       else
-        "#{@record_type}Record/#{@zone}"
+        "#{@record_type}/#{@zone}"
       end
     end
 
-    def get(fqdn, record_id=nil)
-      if record_id
+    def get(fqdn = nil, record_id=nil)
+      if record_id && fqdn
         raw_rr = @dynect.get("#{resource_path}/#{fqdn}/#{record_id}")
-        DynectRest::Resource.new(dynect, raw_rr["record_type"], raw_rr["zone"], raw_rr["fqdn"], raw_rr["record_id"], raw_rr["ttl"], raw_rr["rdata"])
-      else
-        raw_rr_list = []
-        @dynect.get("#{resource_path}/#{fqdn}").each do |record|
-          record =~ /^#{resource_path(:full)}\/#{fqdn}\/(\d+)$/
-          raw_rr_list << self.get(fqdn, $1)
-        end
+
+        DynectRest::Resource.new(dynect,
+                                 raw_rr["record_type"],
+                                 raw_rr["zone"],
+                                 raw_rr["fqdn"],
+                                 raw_rr["record_id"],
+                                 raw_rr["ttl"],
+                                 raw_rr["rdata"])
+      elsif fqdn
+        results = @dynect.get("#{resource_path}/#{fqdn}")
+        raw_rr_list = results.map do |record|
+                                    if record =~ /^#{resource_path(:full)}\/#{fqdn}\/(\d+)$/
+                                      self.get(fqdn, $1)
+                                    else
+                                      record
+                                    end
+                                  end
+
         case raw_rr_list.length
         when 0
           raise DynectRest::Exceptions::RequestFailed, "Cannot find #{record_type} record for #{fqdn}"
@@ -77,6 +88,8 @@ class DynectRest
         else
           raw_rr_list
         end
+      else
+        @dynect.get(resource_path)
       end
     end
 
@@ -104,7 +117,12 @@ class DynectRest
     end
 
     def delete
-      @dynect.delete("#{resource_path}/#{fqdn}/#{record_id}")
+      url = if record_id
+              "#{resource_path}/#{fqdn}/#{record_id}"
+            else
+              "#{resource_path}/#{fqdn}"
+            end
+      @dynect.delete(url)
     end
 
     def to_json
