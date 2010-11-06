@@ -135,7 +135,6 @@ class DynectRest
   # @param [String] The partial path to GET - for example, 'User' or 'Zone'.
   # @param [Hash] Additional HTTP headers
   def get(path_part, additional_headers = {}, &block)
-    puts "GET #{path_part}"
     api_request { @rest[path_part].get(additional_headers, &block) }
   end
 
@@ -146,7 +145,6 @@ class DynectRest
   # @param [String] The partial path to DELETE - for example, 'User' or 'Zone'.
   # @param [Hash] Additional HTTP headers
   def delete(path_part, additional_headers = {}, &block)
-    puts "DELETE #{path_part}"
     api_request { @rest[path_part].delete(additional_headers, &block) }
   end
 
