@@ -66,7 +66,7 @@ class DynectRest
       else
         raw_rr_list = []
         @dynect.get("#{resource_path}/#{fqdn}").each do |record|
-          record =~ /^#{resource_path(:full)}\/#{fqdn}\/(\d+)$/
+          record =~ /^#{resource_path(:full)}\/#{Regexp.escape(fqdn)}\/(\d+)$/
           raw_rr_list << self.get(fqdn, $1)
         end
         case raw_rr_list.length
