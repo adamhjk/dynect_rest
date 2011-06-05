@@ -18,11 +18,11 @@
 
 class DynectRest
 
+  require 'dynect_rest/helpers'
   require 'dynect_rest/exceptions'
   require 'dynect_rest/resource'
   require 'rest_client'
   require 'json'
-  require 'active_support/inflector'
 
   attr_accessor :customer_name, :user_name, :password, :rest, :zone
 
@@ -112,6 +112,7 @@ class DynectRest
     zone ||= @zone 
     put("Zone/#{zone}", { "freeze" => true })
   end
+
 
   ##
   # Resource Records

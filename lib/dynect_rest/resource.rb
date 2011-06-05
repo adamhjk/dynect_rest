@@ -72,18 +72,17 @@ class DynectRest
       elsif fqdn
         results = @dynect.get("#{resource_path}/#{fqdn}")
         raw_rr_list = results.map do |record|
-                                    if record =~ /^#{resource_path(:full)}\/#{fqdn}\/(\d+)$/
-                                      self.get(fqdn, $1)
-                                    else
-                                      record
-                                    end
-                                  end
-
+          if (record =~ /^#{resource_path(:full)}\/#{Regexp.escape(fqdn)}\/(\d+)$/)
+            self.get(fqdn, $1)
+          else
+            record
+          end
+        end
         case raw_rr_list.length
-        when 0
-          raise DynectRest::Exceptions::RequestFailed, "Cannot find #{record_type} record for #{fqdn}"
-        when 1
-          raw_rr_list[0]
+          when 0
+            raise DynectRest::Exceptions::RequestFailed, "Cannot find #{record_type} record for #{fqdn}"
+          when 1
+            raw_rr_list[0]
         else
           raw_rr_list
         end
