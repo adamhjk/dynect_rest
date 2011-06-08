@@ -18,7 +18,6 @@
 
 class DynectRest
 
-  require 'dynect_rest/helpers'
   require 'dynect_rest/exceptions'
   require 'dynect_rest/resource'
   require 'rest_client'
@@ -118,13 +117,13 @@ class DynectRest
   # Resource Records
   ##
   %w{AAAA A CNAME DNSKEY DS KEY LOC MX NS PTR RP SOA SRV TXT}.each do |record_type|
-    define_method record_type.underscore do
+    define_method underscore(record_type) do
       DynectRest::Resource.new(self,"#{record_type}Record" , @zone)
     end
   end
 
   %w{Node NodeList}.each do |type|
-    define_method type.underscore do
+    define_method underscore(type) do
       DynectRest::Resource.new(self,"#{type}" , @zone)
     end
   end
@@ -202,5 +201,17 @@ class DynectRest
       raise DynectRest::Exceptions::RequestFailed, "Request failed: #{error_messages.join("\n")}" 
     end
   end
+
+  private
+    # Convert a CamelCasedString to an under_scored_string.
+    def underscore
+      word = self.to_s.dup
+      word.gsub!(/::/, '/')
+      word.gsub!(/([A-Z]+)([A-Z][a-z])/,'\1_\2')
+      word.gsub!(/([a-z\d])([A-Z])/,'\1_\2')
+      word.tr!("-", "_")
+      word.downcase!
+      word
+    end
 
 end
