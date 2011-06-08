@@ -112,6 +112,16 @@ class DynectRest
     put("Zone/#{zone}", { "thaw" => true })
   end
 
+  # Convert a CamelCasedString to an under_scored_string.
+  def self.underscore(string)
+    word = string.dup
+    word.gsub!(/::/, '/')
+    word.gsub!(/([A-Z]+)([A-Z][a-z])/,'\1_\2')
+    word.gsub!(/([a-z\d])([A-Z])/,'\1_\2')
+    word.tr!("-", "_")
+    word.downcase!
+    word
+  end
 
   ##
   # Resource Records
@@ -202,16 +212,5 @@ class DynectRest
     end
   end
 
-  private
-    # Convert a CamelCasedString to an under_scored_string.
-    def underscore
-      word = self.to_s.dup
-      word.gsub!(/::/, '/')
-      word.gsub!(/([A-Z]+)([A-Z][a-z])/,'\1_\2')
-      word.gsub!(/([a-z\d])([A-Z])/,'\1_\2')
-      word.tr!("-", "_")
-      word.downcase!
-      word
-    end
 
 end
