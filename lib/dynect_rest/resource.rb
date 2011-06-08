@@ -66,7 +66,7 @@ class DynectRest
       else
         raw_rr_list = []
         @dynect.get("#{resource_path}/#{fqdn}").each do |record|
-          record =~ /^#{resource_path(:full)}\/#{fqdn}\/(\d+)$/
+          record =~ /^#{resource_path(:full)}\/#{Regexp.escape(fqdn)}\/(\d+)$/
           raw_rr_list << self.get(fqdn, $1)
         end
         case raw_rr_list.length
@@ -117,7 +117,7 @@ class DynectRest
     def method_missing(method_symbol, *args, &block)
       method_string = method_symbol.to_s
       if (args.length > 0 && method_string !~ /=$/)
-        @rdata[method_string] = *args
+        @rdata[method_string] = args.length == 1 ? args[0] : args
         self
       elsif @rdata.has_key?(method_string)
         @rdata[method_string]
