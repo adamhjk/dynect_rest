@@ -18,6 +18,7 @@
 
 class DynectRest
 
+  require 'dynect_rest/helpers'
   require 'dynect_rest/exceptions'
   require 'dynect_rest/resource'
   require 'rest_client'
@@ -109,15 +110,22 @@ class DynectRest
   # @return [Hash] The dynect API response
   def thaw(zone=nil)
     zone ||= @zone 
-    put("Zone/#{zone}", { "freeze" => true })
+    put("Zone/#{zone}", { "thaw" => true })
   end
+
 
   ##
   # Resource Records
   ##
-  %w{AAAA A CNAME DNSKEY DS KEY LOC MX NS PTR RP SOA SRV TXT}.each do |resource_type|
-    define_method resource_type.downcase.to_sym do
-      DynectRest::Resource.new(self, resource_type, @zone)
+  %w{AAAA A CNAME DNSKEY DS KEY LOC MX NS PTR RP SOA SRV TXT}.each do |record_type|
+    define_method record_type.underscore do
+      DynectRest::Resource.new(self,"#{record_type}Record" , @zone)
+    end
+  end
+
+  %w{Node NodeList}.each do |type|
+    define_method type.underscore do
+      DynectRest::Resource.new(self,"#{type}" , @zone)
     end
   end
 

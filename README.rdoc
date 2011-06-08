@@ -12,7 +12,7 @@ Since this is 90% of what you'll be doing, we make it easy.
   dyn.cname.fqdn("something.example.com").cname("ec2-10-10-10-10.amazonaws.com").save
   dyn.publish
 
-Will add an A record and a CNAME.  You can use the chained method syntax for every resource record - we map unknown methods to the resource data you make in the call.
+Will add an A record and a CNAME.  You can use the chained method syntax for every resource record - we map unknown methods to the resource data you make in the call.  See link:"example.rb" for an executable example using environment variables.
 
 == Everything else
 
