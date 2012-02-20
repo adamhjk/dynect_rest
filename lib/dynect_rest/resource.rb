@@ -63,7 +63,7 @@ class DynectRest
       if record_id && fqdn
         raw_rr = @dynect.get("#{resource_path}/#{fqdn}/#{record_id}")
         DynectRest::Resource.new(dynect,
-                                 raw_rr["record_type"],
+                                 raw_rr["record_type"] + 'Record',
                                  raw_rr["zone"],
                                  raw_rr["fqdn"],
                                  raw_rr["record_id"],
