@@ -39,6 +39,7 @@ class DynectRest
     @password = password
     @rest = RestClient::Resource.new('https://api2.dynect.net/REST/', :headers => { :content_type => 'application/json' })
     @zone = zone 
+    @verbose = verbose
     login if connect
   end
 
