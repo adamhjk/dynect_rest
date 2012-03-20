@@ -53,9 +53,9 @@ class DynectRest
 
     def resource_path(full=false)
       if (full == true || full == :full) 
-        "/REST/#{@record_type}Record/#{@zone}"
+        "/REST/#{@record_type}/#{@zone}"
       else
-        "#{@record_type}Record/#{@zone}"
+        "#{@record_type}/#{@zone}"
       end
     end
 
