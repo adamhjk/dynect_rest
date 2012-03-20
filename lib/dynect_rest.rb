@@ -32,7 +32,8 @@ class DynectRest
   # @param [String] Your dynect password
   # @param [String] The zone you are going to be editing
   # @param [Boolean] Whether to connect immediately or not - runs login for you
-  def initialize(customer_name, user_name, password, zone=nil, connect=true)
+  # @param [Boolean] Verbosity
+  def initialize(customer_name, user_name, password, zone=nil, connect=true, verbose=false)
     @customer_name = customer_name
     @user_name = user_name
     @password = password
@@ -190,7 +191,9 @@ class DynectRest
       response = block.call
       response.body
     rescue RestClient::Exception => e
-      puts "I have #{e.inspect} with #{e.http_code}"
+      if @verbose
+        puts "I have #{e.inspect} with #{e.http_code}"
+      end
       if e.http_code == 307
         get(e.response)
       end
