@@ -130,13 +130,7 @@ class DynectRest
   ##
   %w{AAAA A CNAME DNSKEY DS KEY LOC MX NS PTR RP SOA SRV TXT}.each do |record_type|
     define_method underscore(record_type) do
-      DynectRest::Resource.new(self,"#{record_type}Record" , @zone)
-    end
-  end
-
-  %w{Node NodeList}.each do |type|
-    define_method underscore(type) do
-      DynectRest::Resource.new(self,"#{type}" , @zone)
+      DynectRest::Resource.new(self,"#{record_type}" , @zone)
     end
   end
 

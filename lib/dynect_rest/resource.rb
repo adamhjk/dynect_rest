@@ -6,9 +6,9 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,13 +25,13 @@ class DynectRest
       @dynect = dynect
       @record_type = record_type
       @fqdn = fqdn
-      @record_id = record_id 
-      @ttl = ttl 
+      @record_id = record_id
+      @ttl = ttl
       @zone = zone
-      @rdata = rdata 
+      @rdata = rdata
     end
 
-    def [](rdata_key) 
+    def [](rdata_key)
       @rdata[rdata_key]
     end
 
@@ -42,7 +42,7 @@ class DynectRest
     def fqdn(value=nil)
       value ? (@fqdn = value; self) : @fqdn
     end
-    
+
     def record_id(value=nil)
       value ? (@record_id = value; self) : @record_id
     end
@@ -53,7 +53,7 @@ class DynectRest
 
     def resource_path(full=false)
       @record_type << "Record" unless @record_type[-6,6] == "Record"
-      if (full == true || full == :full) 
+      if (full == true || full == :full)
         "/REST/#{@record_type}/#{@zone}"
       else
         "#{@record_type}/#{@zone}"
@@ -64,7 +64,7 @@ class DynectRest
       if record_id && fqdn
         raw_rr = @dynect.get("#{resource_path}/#{fqdn}/#{record_id}")
         DynectRest::Resource.new(dynect,
-                                 raw_rr["record_type"] + 'Record',
+                                 raw_rr["record_type"],
                                  raw_rr["zone"],
                                  raw_rr["fqdn"],
                                  raw_rr["record_id"],
@@ -80,10 +80,10 @@ class DynectRest
           end
         end
         case raw_rr_list.length
-          when 0
-            raise DynectRest::Exceptions::RequestFailed, "Cannot find #{record_type} record for #{fqdn}"
-          when 1
-            raw_rr_list[0]
+        when 0
+          raise DynectRest::Exceptions::RequestFailed, "Cannot find #{record_type} record for #{fqdn}"
+        when 1
+          raw_rr_list[0]
         else
           raw_rr_list
         end
@@ -108,7 +108,7 @@ class DynectRest
       else
         if replace == true || replace == :replace
           @dynect.put("#{resource_path}/#{@fqdn}", self)
-        else 
+        else
           @dynect.post("#{resource_path}/#{@fqdn}", self)
         end
       end
@@ -146,4 +146,3 @@ class DynectRest
   end
 
 end
-

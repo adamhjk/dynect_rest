@@ -74,14 +74,4 @@ describe DynectRest do
     subject { d.txt }
     its(:resource_path) { should == 'TXTRecord/zone' }
   end
-
-  describe "node_list" do
-    subject { d.node_list }
-    its(:resource_path) { should == 'NodeList/zone' }
-  end
-
-  describe "node" do
-    subject { d.node }
-    its(:resource_path) { should == 'Node/zone' }
-  end
 end
