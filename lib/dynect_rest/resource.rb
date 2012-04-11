@@ -52,6 +52,7 @@ class DynectRest
     end
 
     def resource_path(full=false)
+      @record_type << "Record" unless @record_type[-6,6] == "Record"
       if (full == true || full == :full) 
         "/REST/#{@record_type}/#{@zone}"
       else
