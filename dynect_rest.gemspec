@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "dynect_rest"
-  s.version = "0.4.1"
+  s.version = "0.4.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Adam Jacob"]
-  s.date = "2012-03-28"
+  s.date = "2012-04-11"
   s.description = "Use the Dynect services REST API"
   s.email = "adam@opscode.com"
   s.extra_rdoc_files = [
