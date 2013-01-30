@@ -94,7 +94,7 @@ class DynectRest
 
     def find(fqdn, query_hash)
       results = []
-      get(fqdn).each do |rr|
+      [get(fqdn)].flatten.each do |rr|
         query_hash.each do |key, value|
           results << rr if rr[key.to_s] == value
         end
