@@ -18,10 +18,8 @@
 
 class DynectRest
 
-  #require 'dynect_rest/exceptions'
-  require_relative 'dynect_rest/exceptions'
-  #require 'dynect_rest/resource'
-  require_relative 'dynect_rest/resource'
+  require 'dynect_rest/exceptions'
+  require 'dynect_rest/resource'
   require 'rest_client'
   require 'json'
 
