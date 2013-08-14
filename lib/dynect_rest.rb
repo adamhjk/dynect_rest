@@ -33,11 +33,11 @@ class DynectRest
   # @param [String] The zone you are going to be editing
   # @param [Boolean] Whether to connect immediately or not - runs login for you
   # @param [Boolean] Verbosity
-  def initialize(customer_name, user_name, password, zone=nil, connect=true, verbose=false)
+  def initialize(customer_name, user_name, password, zone=nil, connect=true, verbose=false, max_redirects=10)
     @customer_name = customer_name
     @user_name = user_name
     @password = password
-    @rest = RestClient::Resource.new('https://api2.dynect.net/REST/', :headers => { :content_type => 'application/json' })
+    @rest = RestClient::Resource.new('https://api2.dynect.net/REST/', :headers => { :content_type => 'application/json' }, :max_redirects=>max_redirects)
     @zone = zone 
     @verbose = verbose
     login if connect
