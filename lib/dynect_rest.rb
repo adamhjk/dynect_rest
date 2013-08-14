@@ -196,6 +196,7 @@ class DynectRest
         puts "I have #{e.inspect} with #{e.http_code}"
       end
       if e.http_code == 307
+        e.response.sub!('/REST/','') if e.response =~ /^\/REST\//
         get(e.response)
       end
       e.response
