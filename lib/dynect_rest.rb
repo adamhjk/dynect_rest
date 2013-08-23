@@ -204,14 +204,14 @@ class DynectRest
     when "success"
       response["data"]
     when "incomplete"
-        # we get 'incomplete' when the API is running slow and claims the session has a previous job running
-        # raise an error and return the job ID in case we want to ask the API what the job's status is
-        error_messages = []
-        error_messages.push( "This session may have a job _still_ running (slowly). Call /REST/Job/#{response["job_id"]} to get its status." )
-        response["msgs"].each do |error_message|
-          error_messages << "#{error_message["LVL"]} #{error_message["ERR_CD"]} #{error_message["SOURCE"]} - #{error_message["INFO"]}"
-        end
-        raise DynectRest::Exceptions::IncompleteRequest.new( "#{error_messages.join("\n")}", response["job_id"] )
+      # we get 'incomplete' when the API is running slow and claims the session has a previous job running
+      # raise an error and return the job ID in case we want to ask the API what the job's status is
+      error_messages = []
+      error_messages.push( "This session may have a job _still_ running (slowly). Call /REST/Job/#{response["job_id"]} to get its status." )
+      response["msgs"].each do |error_message|
+        error_messages << "#{error_message["LVL"]} #{error_message["ERR_CD"]} #{error_message["SOURCE"]} - #{error_message["INFO"]}"
+      end
+      raise DynectRest::Exceptions::IncompleteRequest.new( "#{error_messages.join("\n")}", response["job_id"] )
     when "failure"
       error_messages = []
       response["msgs"].each do |error_message|
@@ -220,6 +220,4 @@ class DynectRest
       raise DynectRest::Exceptions::RequestFailed, "Request failed: #{error_messages.join("\n")}" 
     end
   end
-
-
 end
