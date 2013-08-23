@@ -19,5 +19,16 @@
 class DynectRest
   class Exceptions
     class RequestFailed < RuntimeError; end
+    # we need to handle API calls that return a status of 'incomplete' and return the job_id
+    class IncompleteRequest < RuntimeError
+
+        attr_reader :job_id, :message
+
+        def initialize( message, job_id )
+            @message = message
+            @job_id = job_id
+        end
+
+    end
   end
 end
