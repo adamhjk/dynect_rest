@@ -8,9 +8,9 @@ begin
     gem.summary = %Q{Dynect REST API library}
     gem.description = %Q{Use the Dynect services REST API}
     gem.email = "adam@opscode.com"
-    gem.homepage = "http://github.com/adamhjk/dynect-rest"
+    gem.homepage = "http://github.com/adamhjk/dynect_rest"
     gem.authors = ["Adam Jacob"]
-    gem.add_development_dependency "rspec", ">= 2.0"
+    gem.add_development_dependency "rspec", ">= 2.10"
     gem.add_development_dependency "yard", ">= 0"
     gem.add_dependency('json')
     gem.add_dependency('rest-client')
