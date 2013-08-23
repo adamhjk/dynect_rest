@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
     "spec/dynect_rest_spec.rb",
     "spec/spec_helper.rb"
   ]
-  s.homepage = "http://github.com/adamhjk/dynect-rest"
+  s.homepage = "http://github.com/adamhjk/dynect_rest"
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.10"
   s.summary = "Dynect REST API library"
