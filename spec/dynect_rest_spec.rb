@@ -30,6 +30,11 @@ describe DynectRest do
     its(:resource_path) { should == 'DSRecord/zone' }
   end
 
+  describe "gslb" do
+    subject { d.gslb }
+    its(:resource_path) { should == 'GSLB/zone' }
+  end
+
   describe "key" do
     subject { d.key }
     its(:resource_path) { should == 'KEYRecord/zone' }

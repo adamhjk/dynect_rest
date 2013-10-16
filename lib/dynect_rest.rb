@@ -19,6 +19,7 @@
 class DynectRest
 
   require 'dynect_rest/exceptions'
+  require 'dynect_rest/gslb'
   require 'dynect_rest/resource'
   require 'rest_client'
   require 'json'
@@ -132,6 +133,13 @@ class DynectRest
     define_method underscore(record_type) do
       DynectRest::Resource.new(self,"#{record_type}" , @zone)
     end
+  end
+
+  ##
+  # GSLB Service
+  ##
+  def gslb
+    DynectRest::GSLB.new(:dynect => self, :zone => @zone)
   end
 
   # Raw GET request, formatted for Dyn. See list of endpoints at:

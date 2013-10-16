@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Adam Jacob"]
-  s.date = "2012-04-11"
+  s.date = "2013-10-16"
   s.description = "Use the Dynect services REST API"
   s.email = "adam@opscode.com"
   s.extra_rdoc_files = [
@@ -29,17 +29,18 @@ Gem::Specification.new do |s|
     "example.rb",
     "lib/dynect_rest.rb",
     "lib/dynect_rest/exceptions.rb",
+    "lib/dynect_rest/gslb.rb",
     "lib/dynect_rest/resource.rb",
     "spec/dynect_rest_spec.rb",
     "spec/spec_helper.rb"
   ]
   s.homepage = "http://github.com/adamhjk/dynect-rest"
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.10"
+  s.rubygems_version = "2.0.5"
   s.summary = "Dynect REST API library"
 
   if s.respond_to? :specification_version then
-    s.specification_version = 3
+    s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rest-client>, [">= 0"])
