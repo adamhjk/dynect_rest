@@ -1,5 +1,5 @@
 #
-# Author:: Evan Gilamn (<evan@pagerduty.com>)
+# Author:: Evan Gilman (<evan@pagerduty.com>)
 # Copyright:: Copyright (c) 2013 PagerDuty, Inc.
 # License:: Apache License, Version 2.0
 #
@@ -19,18 +19,20 @@
 class DynectRest
   class GSLB
 
-    def initialize(init_hash)
+    def initialize(init_hash={})
+      validate(init_hash, [:dynect, :zone])
+
       @dynect = init_hash[:dynect]
       @zone = init_hash[:zone]
-      @fqdn = init_hash.has_key?(:fqdn) ? init_hash[:fqdn] : nil
-      @ttl = init_hash.has_key?(:ttl) ? init_hash[:ttl] : 30
-      @host_list = init_hash.has_key?(:host_list) ? init_hash[:host_list] : {}
-      @contact_nick = init_hash.has_key?(:contact_nick) ? init_hash[:contact_nick] : 'owner'
+      @fqdn = init_hash[:fqdn]
+      @ttl = init_hash[:ttl] : 30
+      @host_list = init_hash[:host_list] || {}
+      @contact_nick = init_hash[:contact_nick] || 'owner'
       
-      @region_code = init_hash.has_key?(:region_code) ? init_hash[:region_code] : 'global'
-      @monitor = init_hash.has_key?(:monitor) ? init_hash[:monitor] : {}
-      @serve_count = init_hash.has_key?(:serve_count) ? init_hash[:serve_count] : 1
-      @min_healthy = init_hash.has_key?(:min_healthy) ? init_hash[:min_healthy] : 1
+      @region_code = init_hash[:region_code] || 'global'
+      @monitor = init_hash[:monitor] || {}
+      @serve_count = init_hash[:serve_count] || 1
+      @min_healthy = init_hash[:min_healthy] || 1
     end
 
     def [](host_list_key)
@@ -67,11 +69,11 @@ class DynectRest
     end
 
     def resource_path(full=false)
-      @service_type = "GSLB"
+      service_type = "GSLB"
       if (full == true || full == :full)
-        "/REST/#{@service_type}/#{@zone}"
+        "/REST/#{service_type}/#{@zone}"
       else
-        "#{@service_type}/#{@zone}"
+        "#{service_type}/#{@zone}"
       end
     end
 
@@ -119,6 +121,12 @@ class DynectRest
 
     def delete
       @dynect.delete("#{resource_path}/#{fqdn}")
+    end
+
+    def validate(init_hash, required_keys)
+      required_keys.each do |k|
+        raise ArgumentError, "You must provide a value for #{k}" unless init_hash[k]
+      end
     end
 
     def to_json
