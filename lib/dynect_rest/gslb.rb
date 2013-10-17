@@ -25,7 +25,7 @@ class DynectRest
       @dynect = init_hash[:dynect]
       @zone = init_hash[:zone]
       @fqdn = init_hash[:fqdn]
-      @ttl = init_hash[:ttl] : 30
+      @ttl = init_hash[:ttl] || 30
       @host_list = init_hash[:host_list] || {}
       @contact_nick = init_hash[:contact_nick] || 'owner'
       
