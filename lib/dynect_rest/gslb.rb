@@ -43,8 +43,20 @@ class DynectRest
       value ? (@fqdn = value; self) : @fqdn
     end
 
+    def contact_nick(value=nil)
+      value ? (@contact_nick = value; self) : @contact_nick
+    end
+
     def ttl(value=nil)
       value ? (@ttl = value; self) : @ttl
+    end
+
+    def min_healthy(value=nil)
+      value ? (@min_healthy = value; self) : @min_healthy
+    end
+
+    def serve_count(value=nil)
+      value ? (@serve_count = value; self) : @serve_count
     end
 
     def region_code(value=nil)
@@ -77,24 +89,36 @@ class DynectRest
       end
     end
 
-    def get(fqdn = nil)
+    def get(fqdn=nil, region_code='global')
       if fqdn
         results = @dynect.get("#{resource_path}/#{fqdn}")
-        raw_rr_list = results.map do |record|
-          if (record =~ /^#{resource_path(:full)}\/#{Regexp.escape(fqdn)}\/(\d+)$/)
-            self.get(fqdn, $1)
-          else
-            record
-          end
+        region = {}
+        results["region"].each {|r| region = r if r["region_code"] == region_code}
+        raise DynectRest::Exceptions::RequestFailed, "Cannot find #{region_code} GSLB pool for #{fqdn}" if region.empty?
+
+        # Default monitor timeout is 0, but specifying timeout 0 on a put or post results in an exception
+        results["monitor"].delete("timeout") if results["monitor"]["timeout"] == 0
+
+        host_list = {}
+        region["pool"].each do |h|
+          host_list[h["address"]] = {
+                                    :address => h["address"],
+                                    :label => h["label"],
+                                    :weight => h["weight"],
+                                    :serve_mode => h["serve_mode"]
+                                    }
         end
-        case raw_rr_list.length
-        when 0
-          raise DynectRest::Exceptions::RequestFailed, "Cannot find #{record_type} record for #{fqdn}"
-        when 1
-          raw_rr_list[0]
-        else
-          raw_rr_list
-        end
+        DynectRest::GSLB.new(:dynect => @dynect,
+                                 :zone => results["zone"],
+                                 :fqdn => results["fqdn"],
+                                 :ttl => results["ttl"],
+                                 :host_list => host_list,
+                                 :contact_nick => results["contact_nickname"],
+                                 :region_code => region["region_code"],
+                                 :monitor => results["monitor"],
+                                 :serve_count => region["serve_count"],
+                                 :min_healthy => region["min_healthy"]
+                                 )
       else
         @dynect.get(resource_path)
       end
