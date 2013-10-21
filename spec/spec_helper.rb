@@ -3,7 +3,3 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'dynect_rest'
 require 'rspec'
 require 'rspec/autorun'
-
-RSpec.configure  do |config|
-  
-end

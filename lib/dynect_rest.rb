@@ -34,11 +34,11 @@ class DynectRest
   # @param [String] The zone you are going to be editing
   # @param [Boolean] Whether to connect immediately or not - runs login for you
   # @param [Boolean] Verbosity
-  def initialize(customer_name, user_name, password, zone=nil, connect=true, verbose=false)
+  def initialize(customer_name, user_name, password, zone=nil, connect=true, verbose=false, max_redirects=10)
     @customer_name = customer_name
     @user_name = user_name
     @password = password
-    @rest = RestClient::Resource.new('https://api2.dynect.net/REST/', :headers => { :content_type => 'application/json' })
+    @rest = RestClient::Resource.new('https://api2.dynect.net/REST/', :headers => { :content_type => 'application/json' }, :max_redirects=>max_redirects)
     @zone = zone 
     @verbose = verbose
     login if connect
@@ -198,18 +198,29 @@ class DynectRest
         puts "I have #{e.inspect} with #{e.http_code}"
       end
       if e.http_code == 307
+        e.response.sub!('/REST/','') if e.response =~ /^\/REST\//
         get(e.response)
       end
       e.response
     end
-    parse_response(JSON.parse(response_body))
+
+    parse_response(JSON.parse(response_body || '{}'))
   end
 
   def parse_response(response)
     case response["status"]
     when "success"
       response["data"]
-    when "failure", "incomplete"
+    when "incomplete"
+      # we get 'incomplete' when the API is running slow and claims the session has a previous job running
+      # raise an error and return the job ID in case we want to ask the API what the job's status is
+      error_messages = []
+      error_messages.push( "This session may have a job _still_ running (slowly). Call /REST/Job/#{response["job_id"]} to get its status." )
+      response["msgs"].each do |error_message|
+        error_messages << "#{error_message["LVL"]} #{error_message["ERR_CD"]} #{error_message["SOURCE"]} - #{error_message["INFO"]}"
+      end
+      raise DynectRest::Exceptions::IncompleteRequest.new( "#{error_messages.join("\n")}", response["job_id"] )
+    when "failure"
       error_messages = []
       response["msgs"].each do |error_message|
         error_messages << "#{error_message["LVL"]} #{error_message["ERR_CD"]} #{error_message["SOURCE"]} - #{error_message["INFO"]}"
@@ -217,6 +228,4 @@ class DynectRest
       raise DynectRest::Exceptions::RequestFailed, "Request failed: #{error_messages.join("\n")}" 
     end
   end
-
-
 end

@@ -1,82 +1,74 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe DynectRest do
-  let(:d) do
+
+  let(:dynect) do
     DynectRest.new("customer", "username", "password", "zone", false)
   end
 
-  describe "a" do
-    subject { d.a }
-    its(:resource_path) { should == 'ARecord/zone' }
+  it "A Record" do
+    expect(dynect.a.resource_path).to eq('ARecord/zone')
   end
 
-  describe "aaaa" do
-    subject { d.aaaa }
-    its(:resource_path) { should == 'AAAARecord/zone' }
+  it "AAAA Record" do
+    expect(dynect.aaaa.resource_path).to eq('AAAARecord/zone')
   end
 
-  describe "cname" do
-    subject { d.cname }
-    its(:resource_path) { should == 'CNAMERecord/zone' }
+  it "CNAME Record" do
+    expect(dynect.cname.resource_path).to eq('CNAMERecord/zone')
   end
 
-  describe "dnskey" do
-    subject { d.dnskey }
-    its(:resource_path) { should == 'DNSKEYRecord/zone' }
+  it "DNSKEY Record" do
+    expect(dynect.dnskey.resource_path).to eq('DNSKEYRecord/zone')
   end
 
-  describe "ds" do
-    subject { d.ds }
-    its(:resource_path) { should == 'DSRecord/zone' }
+  it "DS Record" do
+    expect(dynect.ds.resource_path).to eq('DSRecord/zone')
   end
 
   describe "gslb" do
-    subject { d.gslb }
+    subject { dynect.gslb }
     its(:resource_path) { should == 'GSLB/zone' }
   end
 
   describe "key" do
-    subject { d.key }
+    subject { dynect.key }
     its(:resource_path) { should == 'KEYRecord/zone' }
   end
 
-  describe "loc" do
-    subject { d.loc }
-    its(:resource_path) { should == 'LOCRecord/zone' }
+  it "KEY Record" do
+    expect(dynect.key.resource_path).to eq('KEYRecord/zone')
   end
 
-  describe "mx" do
-    subject { d.mx }
-    its(:resource_path) { should == 'MXRecord/zone' }
+  it "LOC Record" do
+    expect(dynect.loc.resource_path).to eq('LOCRecord/zone')
   end
 
-  describe "ns" do
-    subject { d.ns }
-    its(:resource_path) { should == 'NSRecord/zone' }
+  it "MX Record" do
+    expect(dynect.mx.resource_path).to eq('MXRecord/zone')
   end
 
-  describe "ptr" do
-    subject { d.ptr }
-    its(:resource_path) { should == 'PTRRecord/zone' }
+  it "NS Record" do
+    expect(dynect.ns.resource_path).to eq('NSRecord/zone')
   end
 
-  describe "rp" do
-    subject { d.rp }
-    its(:resource_path) { should == 'RPRecord/zone' }
+  it "PTR Record" do
+    expect(dynect.ptr.resource_path).to eq('PTRRecord/zone')
   end
 
-  describe "soa" do
-    subject { d.soa }
-    its(:resource_path) { should == 'SOARecord/zone' }
+  it "RPR Record" do
+    expect(dynect.rp.resource_path).to eq('RPRecord/zone')
   end
 
-  describe "srv" do
-    subject { d.srv }
-    its(:resource_path) { should == 'SRVRecord/zone' }
+  it "SOA Record" do
+    expect(dynect.soa.resource_path).to eq('SOARecord/zone')
   end
 
-  describe "txt" do
-    subject { d.txt }
-    its(:resource_path) { should == 'TXTRecord/zone' }
+  it "SRV Record" do
+    expect(dynect.srv.resource_path).to eq('SRVRecord/zone')
+  end
+
+  it "TXT Record" do
+    expect(dynect.txt.resource_path).to eq('TXTRecord/zone')
   end
 end
