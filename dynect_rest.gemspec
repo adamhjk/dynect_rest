@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "http://github.com/adamhjk/dynect-rest"
   s.files = %w(Rakefile LICENSE ) + Dir.glob("{lib,spec}/**/*", File::FNM_DOTMATCH).reject {|f| File.directory?(f) }
-  s.homepage = "http://github.com/adamhjk/dynect_rest"
   s.require_paths = ["lib"]
   s.rubygems_version = "2.0.3"
   s.summary = "Dynect REST API library"
