@@ -14,6 +14,32 @@ Since this is 90% of what you'll be doing, we make it easy.
 
 Will add an A record and a CNAME.  You can use the chained method syntax for every resource record - we map unknown methods to the resource data you make in the call.  See link:"example.rb" for an executable example using environment variables.
 
+== GSLB
+
+Create a new GSLB:
+
+  require 'dynect_rest'
+  dyn = DynectRest.new("CUSTOMER", "USERNAME", "PASSWORD", "ZONE")
+  gslb = dyn.gslb()
+  gslb.fqdn("sunshine.example.com").ttl(30).region_code("global")
+  gslb.min_healthy(1).serve_count(2)
+  gslb.monitor(:protocol => "HTTP", :interval => 1, :port => 8000, :path => "/healthcheck", :host => "sunshine.example.com")
+  gslb.add_host(:address => "1.1.1.1", :label => "friendly_name", :weight => 10, :serve_mode => "obey")
+  gslb.add_host(:address => "1.1.1.2", :label => "friendly_name2", :weight => 10, :serve_mode => "obey")
+  gslb.save
+
+This will create a GSLB with hosts 1.1.1.1 and 1.1.1.2 in the global region. The parameters are self-explanatory.
+
+Add a host to an existing GSLB:
+
+  require 'dynect_rest'
+  dyn = DynectRest.new("CUSTOMER", "USERNAME", "PASSWORD", "ZONE")
+  gslb = dyn.gslb.get("sunshine.example.com")
+  gslb.add_host(:address => "1.1.1.3", :label => "friendly_name3", :weight => 10, :serve_mode => "obey")
+  gslb.save(:replace)
+
+This will fetch the GSLB object for "sunshine.example.com", add the host 1.1.1.3, and save the updated configuration back to dynect.
+
 == Everything else
 
 We wrap up the lower-level functionality of the API, so you can focus on just making the calls.  For example, to get a list of contacts:

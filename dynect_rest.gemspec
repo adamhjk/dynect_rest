@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
     "example.rb",
     "lib/dynect_rest.rb",
     "lib/dynect_rest/exceptions.rb",
+    "lib/dynect_rest/gslb.rb",
     "lib/dynect_rest/resource.rb",
     "spec/dynect_rest_spec.rb",
     "spec/spec_helper.rb"
