@@ -130,8 +130,15 @@ class DynectRest
   ##
   %w{AAAA A CNAME DNSKEY DS KEY LOC MX NS PTR RP SOA SRV TXT}.each do |record_type|
     define_method underscore(record_type) do
-      DynectRest::Resource.new(self,"#{record_type}" , @zone)
+      DynectRest::Resource.new(self, "#{record_type}", @zone)
     end
+  end
+
+  ##
+  # Get resource records of any type
+  ##
+  def any
+     DynectRest::AnyResource.new(self, @zone)
   end
 
   # Raw GET request, formatted for Dyn. See list of endpoints at:
