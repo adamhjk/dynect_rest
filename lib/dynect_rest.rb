@@ -80,6 +80,18 @@ class DynectRest
     get("NodeList/#{resource}")
   end
 
+  # Get all the entries in a zone
+  #
+  # See: https://help.dynect.net/get-all-records-api/
+  #
+  # Retrieves all records from the zone -- https://api.dynect.net/REST/AllRecord/<zone>
+  # Retrieves all records from the node -- https://api.dynect.net/REST/AllRecord/<zone>/<FQDN>/
+  def all_records(zone=nil, fqdn=nil)
+    zone ||= @zone
+    resource = [zone,fqdn].compact.join("/")
+    get("AllRecord/#{resource}")
+  end
+
   ##
   # Zone
   ##
