@@ -133,7 +133,7 @@ class DynectRest
 
     def method_missing(method_symbol, *args, &block)
       method_string = method_symbol.to_s
-      if (args.length > 0 && method_string !~ /=$/)
+      if (args.any? && method_string !~ /=$/)
         @rdata[method_string] = args.length == 1 ? args[0] : args
         self
       elsif @rdata.has_key?(method_string)

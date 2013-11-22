@@ -77,7 +77,9 @@ class DynectRest
   def node_list(zone=nil, fqdn=nil)
     zone ||= @zone
     resource = [zone,fqdn].compact.join("/")
-    get("NodeList/#{resource}")
+    get("NodeList/#{resource}").each do |ref|
+      ref.sub!(/^\/REST\//,'')
+    end
   end
 
   # Get all the entries in a zone
@@ -89,7 +91,9 @@ class DynectRest
   def all_records(zone=nil, fqdn=nil)
     zone ||= @zone
     resource = [zone,fqdn].compact.join("/")
-    get("AllRecord/#{resource}")
+    get("AllRecord/#{resource}").each do |ref|
+      ref.sub!(/^\/REST\//,'')
+    end
   end
 
   ##
@@ -222,7 +226,7 @@ class DynectRest
         puts "I have #{e.inspect} with #{e.http_code}"
       end
       if e.http_code == 307
-        e.response.sub!('/REST/','') if e.response =~ /^\/REST\//
+        e.response.sub!(/^\/REST\//,'')
         get(e.response)
       end
       e.response
