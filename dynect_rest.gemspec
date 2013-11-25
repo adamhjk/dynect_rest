@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
     "LICENSE",
     "README.rdoc"
   ]
-  s.homepage = "http://github.com/adamhjk/dynect-rest"
+  s.homepage = "http://github.com/adamhjk/dynect_rest"
   s.files = %w(Rakefile LICENSE ) + Dir.glob("{lib,spec}/**/*", File::FNM_DOTMATCH).reject {|f| File.directory?(f) }
   s.require_paths = ["lib"]
   s.rubygems_version = "2.0.3"
