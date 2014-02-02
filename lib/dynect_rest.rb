@@ -6,9 +6,9 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,15 +39,15 @@ class DynectRest
     @user_name = user_name
     @password = password
     @rest = RestClient::Resource.new('https://api2.dynect.net/REST/', :headers => { :content_type => 'application/json' }, :max_redirects=>max_redirects)
-    @zone = zone 
+    @zone = zone
     @verbose = verbose
     login if connect
   end
 
   ##
   # Session Management
-  ## 
-  
+  ##
+
   # Login to Dynect - must be done before any other methods called.
   #
   # See: https://manage.dynect.net/help/docs/api2/rest/resources/Session.html
@@ -68,6 +68,34 @@ class DynectRest
     delete('Session')
   end
 
+  # Get all the entries in a zone
+  #
+  # See: https://help.dynect.net/get-node-list-api/
+  #
+  # Get nodes under the FQDN -- https://api.dynect.net/REST/NodeLIst/<zone>/<FQDN>/
+  # Get nodes in the zone -- https://api.dynect.net/REST/NodeList/<zone>/
+  def node_list(zone=nil, fqdn=nil)
+    zone ||= @zone
+    resource = [zone,fqdn].compact.join("/")
+    get("NodeList/#{resource}").each do |ref|
+      ref.sub!(/^\/REST\//,'')
+    end
+  end
+
+  # Get all the entries in a zone
+  #
+  # See: https://help.dynect.net/get-all-records-api/
+  #
+  # Retrieves all records from the zone -- https://api.dynect.net/REST/AllRecord/<zone>
+  # Retrieves all records from the node -- https://api.dynect.net/REST/AllRecord/<zone>/<FQDN>/
+  def all_records(zone=nil, fqdn=nil)
+    zone ||= @zone
+    resource = [zone,fqdn].compact.join("/")
+    get("AllRecord/#{resource}").each do |ref|
+      ref.sub!(/^\/REST\//,'')
+    end
+  end
+
   ##
   # Zone
   ##
@@ -77,7 +105,7 @@ class DynectRest
   #
   # @param [String] The zone to fetch - if one is provided when instantiated, we use that.
   # @return [Hash] The dynect API response
-  def get_zone(zone=nil)  
+  def get_zone(zone=nil)
     zone ||= @zone
     get("Zone/#{zone}")
   end
@@ -89,7 +117,7 @@ class DynectRest
   # @param [String] The zone to publish - if one is provided when instantiated, we use that.
   # @return [Hash] The dynect API response
   def publish(zone=nil)
-    zone ||= @zone 
+    zone ||= @zone
     put("Zone/#{zone}", { "publish" => true })
   end
 
@@ -100,7 +128,7 @@ class DynectRest
   # @param [String] The zone to freeze - if one is provided when instantiated, we use that.
   # @return [Hash] The dynect API response
   def freeze(zone=nil)
-    zone ||= @zone 
+    zone ||= @zone
     put("Zone/#{zone}", { "freeze" => true })
   end
 
@@ -111,7 +139,7 @@ class DynectRest
   # @param [String] The zone to thaw - if one is provided when instantiated, we use that.
   # @return [Hash] The dynect API response
   def thaw(zone=nil)
-    zone ||= @zone 
+    zone ||= @zone
     put("Zone/#{zone}", { "thaw" => true })
   end
 
@@ -198,7 +226,7 @@ class DynectRest
         puts "I have #{e.inspect} with #{e.http_code}"
       end
       if e.http_code == 307
-        e.response.sub!('/REST/','') if e.response =~ /^\/REST\//
+        e.response.sub!(/^\/REST\//,'')
         get(e.response)
       end
       e.response
@@ -225,7 +253,7 @@ class DynectRest
       response["msgs"].each do |error_message|
         error_messages << "#{error_message["LVL"]} #{error_message["ERR_CD"]} #{error_message["SOURCE"]} - #{error_message["INFO"]}"
       end
-      raise DynectRest::Exceptions::RequestFailed, "Request failed: #{error_messages.join("\n")}" 
+      raise DynectRest::Exceptions::RequestFailed, "Request failed: #{error_messages.join("\n")}"
     end
   end
 end
