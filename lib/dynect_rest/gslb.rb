@@ -31,6 +31,7 @@ class DynectRest
       
       @region_code = init_hash[:region_code] || 'global'
       @monitor = init_hash[:monitor] || {}
+      @notify_events = init_hash[:notify_events] || {}
       @serve_count = init_hash[:serve_count] || 1
       @min_healthy = init_hash[:min_healthy] || 1
     end
@@ -74,6 +75,11 @@ class DynectRest
       value ? (@monitor = value; self) : @monitor
     end
 
+    def notify_events(value=nil)
+      # :ip => true, :svc => true, :nosrv => true
+      value ? (@notify_events = value; self) : @notify_events
+    end
+
     def add_host(value)
       # :address => 'x.x.x.x', :label => 'friendly-name', :weight => 10, :serve_mode => 'obey'
       @host_list[value[:address]] = value
@@ -108,6 +114,10 @@ class DynectRest
                                     :serve_mode => h["serve_mode"]
                                     }
         end
+
+        notify_events = {}
+        results["notify_events"].split(/,/).each {|s| notify_events[s] = true}
+
         DynectRest::GSLB.new(:dynect => @dynect,
                                  :zone => results["zone"],
                                  :fqdn => results["fqdn"],
@@ -116,6 +126,7 @@ class DynectRest
                                  :contact_nick => results["contact_nickname"],
                                  :region_code => region["region_code"],
                                  :monitor => results["monitor"],
+                                 :notify_events => notify_events,
                                  :serve_count => region["serve_count"],
                                  :min_healthy => region["min_healthy"]
                                  )
@@ -157,6 +168,7 @@ class DynectRest
       {
         "ttl"   => @ttl,
         "monitor" => @monitor.sort,
+        "notify_events" => @notify_events.reject {|k,v| !v}.keys.join(','),
         "region" => {
           "region_code" => @region_code,
           "serve_count" => @serve_count,
