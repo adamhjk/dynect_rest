@@ -170,6 +170,23 @@ class DynectRest
     DynectRest::GSLB.new(:dynect => self, :zone => @zone)
   end
 
+  # Get a QPS report.
+  #
+  # See: https://manage.dynect.net/help/docs/api2/rest/resources/QPSReport.html
+  #
+  # @param [Time] The start time
+  # @param [Time] The end time
+  # @param [Hash] Extra parameters to the QPSReport API
+  # @return [Hash] The dynect API response
+  def qps_report(start_ts, end_ts, params = {})
+    start_ts = start_ts.tv_sec if start_ts.is_a?(Time)
+    end_ts = end_ts.tv_sec if end_ts.is_a?(Time)
+    post('QPSReport',
+         {:start_ts => start_ts, :end_ts => end_ts}.merge(params),
+         {},
+         &method(:follow_redirection))
+  end
+
   # Raw GET request, formatted for Dyn. See list of endpoints at:
   #
   # https://manage.dynect.net/help/docs/api2/rest/resources/
@@ -254,6 +271,18 @@ class DynectRest
         error_messages << "#{error_message["LVL"]} #{error_message["ERR_CD"]} #{error_message["SOURCE"]} - #{error_message["INFO"]}"
       end
       raise DynectRest::Exceptions::RequestFailed, "Request failed: #{error_messages.join("\n")}"
+    end
+  end
+
+  # Per RFC, the underlying rest_client gem handles redirects automatically
+  # for GET and HEAD requests, but not POSTs. This can cause issues for some
+  # dynect APIs.
+  # Cf. http://rubydoc.info/gems/rest-client/1.6.7/file/README.rdoc#Result_handling
+  def follow_redirection(response, request, result, &block)
+    if [301, 302, 307].include? response.code
+      response.follow_redirection(request, result, &block)
+    else
+      response.return!(request, result, &block)
     end
   end
 end
