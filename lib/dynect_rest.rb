@@ -229,7 +229,8 @@ class DynectRest
         e.response.sub!(/^\/REST\//,'')
         get(e.response)
       end
-      e.response
+      # Something went wrong, so escalate to caller
+      raise DynectRest::Exceptions::RequestFailed, "Request failed: #{e.inspect}"
     end
 
     parse_response(JSON.parse(response_body || '{}'))
