@@ -226,13 +226,14 @@ class DynectRest
         puts "I have #{e.inspect} with #{e.http_code}"
       end
       if e.http_code == 307
-        e.response.sub!(/^\/REST\//,'')
-        get(e.response)
+        redirect_path = e.response
+        get(redirect_path.sub(/^\/REST\//,''))
+      else
+        e.response
       end
-      e.response
     end
 
-    parse_response(JSON.parse(response_body || '{}'))
+    parse_response(JSON.parse(response_body))
   end
 
   def parse_response(response)
