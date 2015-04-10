@@ -26,9 +26,36 @@ describe DynectRest do
     expect(dynect.ds.resource_path).to eq('DSRecord/zone')
   end
 
-  describe "gslb" do
-    subject { dynect.gslb }
-    its(:resource_path) { should == 'GSLB/zone' }
+  describe "GSLB" do
+
+    let(:gslb) do
+      dynect.gslb.
+        add_host(:address => '1.1.1.1', :label => 'one', :weight => 1, :serve_mode => 'obey').
+        monitor(:protocol => 'HTTPS', :path => '/_test.gif', :interval => 1, :retries => 3).
+        notify_events(:ip => true, :nosrv => false)
+    end
+
+    it "Resource Path" do
+      expect(gslb.resource_path).to eq('GSLB/zone')
+    end
+
+    describe "Host List" do
+      subject { gslb.host_list }
+      its(['1.1.1.1']) { should satisfy { |h| h[:label] == 'one' } }
+      it { should_not include('1.1.2.2') }
+    end
+
+    it "Monitoring" do
+      expect(gslb.monitor[:protocol]).to eq('HTTPS')
+    end
+
+    describe "Notify Events" do
+      subject { JSON.parse(gslb.to_json)['notify_events'] }
+      it { should match(/\bip\b/) }
+      it { should_not match(/\bsvc\b/) }
+      it { should_not match(/\bnosrv\b/) }
+    end
+
   end
 
   describe "key" do
