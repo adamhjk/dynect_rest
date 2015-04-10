@@ -22,7 +22,7 @@ class DynectRest
   require 'dynect_rest/gslb'
   require 'dynect_rest/resource'
   require 'rest_client'
-  require 'json'
+  require 'json_pure'
 
   attr_accessor :customer_name, :user_name, :password, :rest, :zone
 
