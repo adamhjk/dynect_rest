@@ -153,9 +153,9 @@ class DynectRest
       end
     end
 
-    def to_json
+    def to_hash
       {
-        "ttl"   => @ttl,
+        "ttl" => @ttl,
         "monitor" => @monitor,
         "region" => {
           "region_code" => @region_code,
@@ -164,7 +164,11 @@ class DynectRest
           "pool" => @host_list.values
         },
         "contact_nickname" => @contact_nick
-      }.to_json
+      }
+    end
+
+    def to_json
+      to_hash.to_json
     end
   end
 end
