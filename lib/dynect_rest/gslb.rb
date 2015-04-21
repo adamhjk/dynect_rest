@@ -156,7 +156,7 @@ class DynectRest
     def to_json
       {
         "ttl"   => @ttl,
-        "monitor" => @monitor.sort,
+        "monitor" => @monitor,
         "region" => {
           "region_code" => @region_code,
           "serve_count" => @serve_count,
