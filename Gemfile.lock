@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    dynect_rest (0.4.5)
+    dynect_rest (0.4.6)
       rest-client
 
 GEM
