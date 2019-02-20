@@ -17,7 +17,6 @@
 #
 
 class DynectRest
-
   require 'dynect_rest/exceptions'
   require 'dynect_rest/gslb'
   require 'dynect_rest/resource'
@@ -28,17 +27,18 @@ class DynectRest
 
   # Creates a new base object for interacting with Dynect's REST API
   #
-  # @param [String] Your dynect customer name
-  # @param [String] Your dnyect user name
-  # @param [String] Your dynect password
-  # @param [String] The zone you are going to be editing
-  # @param [Boolean] Whether to connect immediately or not - runs login for you
-  # @param [Boolean] Verbosity
-  def initialize(customer_name, user_name, password, zone=nil, connect=true, verbose=false, max_redirects=10)
+  # @param customer_name [String] Your dynect customer name
+  # @param user_name [String] Your dnyect user name
+  # @param password [String] Your dynect password
+  # @param zone [String] The zone you are going to be editing
+  # @param connect [Boolean] Whether to connect immediately or not - runs login for you
+  # @param verbose [Boolean] Verbosity
+  # @param max_redirects [Int] Number of redirects, default is 10
+  def initialize(customer_name, user_name, password, zone = nil, connect = true, verbose = false, max_redirects = 10)
     @customer_name = customer_name
     @user_name = user_name
     @password = password
-    @rest = RestClient::Resource.new('https://api2.dynect.net/REST/', :headers => { :content_type => 'application/json' }, :max_redirects=>max_redirects)
+    @rest = RestClient::Resource.new('https://api2.dynect.net/REST/', headers: { content_type: 'application/json' }, max_redirects: max_redirects)
     @zone = zone
     @verbose = verbose
     login if connect
@@ -54,8 +54,8 @@ class DynectRest
   #
   # @return [Hash] The dynect API response
   def login
-    response = post('Session', { 'customer_name' => @customer_name, 'user_name' => @user_name, 'password' => @password })
-    @rest.headers[:auth_token] = response["token"]
+    response = post('Session', 'customer_name' => @customer_name, 'user_name' => @user_name, 'password' => @password)
+    @rest.headers[:auth_token] = response['token']
     response
   end
 
@@ -74,11 +74,13 @@ class DynectRest
   #
   # Get nodes under the FQDN -- https://api.dynect.net/REST/NodeLIst/<zone>/<FQDN>/
   # Get nodes in the zone -- https://api.dynect.net/REST/NodeList/<zone>/
-  def node_list(zone=nil, fqdn=nil)
+  # @param zone [String] See above
+  # @param fqdn [String] See above
+  def node_list(zone = nil, fqdn = nil)
     zone ||= @zone
-    resource = [zone,fqdn].compact.join("/")
+    resource = [zone, fqdn].compact.join('/')
     get("NodeList/#{resource}").each do |ref|
-      ref.sub!(/^\/REST\//,'')
+      ref.sub!(/^\/REST\//, '')
     end
   end
 
@@ -88,11 +90,13 @@ class DynectRest
   #
   # Retrieves all records from the zone -- https://api.dynect.net/REST/AllRecord/<zone>
   # Retrieves all records from the node -- https://api.dynect.net/REST/AllRecord/<zone>/<FQDN>/
-  def all_records(zone=nil, fqdn=nil)
+  # @param zone [String] See above
+  # @param fqdn [String] See above
+  def all_records(zone = nil, fqdn = nil)
     zone ||= @zone
-    resource = [zone,fqdn].compact.join("/")
+    resource = [zone, fqdn].compact.join('/')
     get("AllRecord/#{resource}").each do |ref|
-      ref.sub!(/^\/REST\//,'')
+      ref.sub!(/^\/REST\//, '')
     end
   end
 
@@ -103,9 +107,9 @@ class DynectRest
   #
   # See: https://manage.dynect.net/help/docs/api2/rest/resources/Zone.html
   #
-  # @param [String] The zone to fetch - if one is provided when instantiated, we use that.
+  # @param zone [String] The zone to fetch - if one is provided when instantiated, we use that.
   # @return [Hash] The dynect API response
-  def get_zone(zone=nil)
+  def get_zone(zone = nil)
     zone ||= @zone
     get("Zone/#{zone}")
   end
@@ -114,42 +118,42 @@ class DynectRest
   #
   # See: https://manage.dynect.net/help/docs/api2/rest/resources/Zone.html
   #
-  # @param [String] The zone to publish - if one is provided when instantiated, we use that.
+  # @param zone [String] The zone to publish - if one is provided when instantiated, we use that.
   # @return [Hash] The dynect API response
-  def publish(zone=nil)
+  def publish(zone = nil)
     zone ||= @zone
-    put("Zone/#{zone}", { "publish" => true })
+    put("Zone/#{zone}", 'publish' => true)
   end
 
   # Freeze the zone.
   #
   # See: https://manage.dynect.net/help/docs/api2/rest/resources/Zone.html
   #
-  # @param [String] The zone to freeze - if one is provided when instantiated, we use that.
+  # @param zone [String] The zone to freeze - if one is provided when instantiated, we use that.
   # @return [Hash] The dynect API response
-  def freeze(zone=nil)
+  def freeze(zone = nil)
     zone ||= @zone
-    put("Zone/#{zone}", { "freeze" => true })
+    put("Zone/#{zone}", 'freeze' => true)
   end
 
   # Thaw the zone.
   #
   # See: https://manage.dynect.net/help/docs/api2/rest/resources/Zone.html
   #
-  # @param [String] The zone to thaw - if one is provided when instantiated, we use that.
+  # @param zone [String] The zone to thaw - if one is provided when instantiated, we use that.
   # @return [Hash] The dynect API response
-  def thaw(zone=nil)
+  def thaw(zone = nil)
     zone ||= @zone
-    put("Zone/#{zone}", { "thaw" => true })
+    put("Zone/#{zone}", 'thaw' => true)
   end
 
   # Convert a CamelCasedString to an under_scored_string.
   def self.underscore(string)
     word = string.dup
     word.gsub!(/::/, '/')
-    word.gsub!(/([A-Z]+)([A-Z][a-z])/,'\1_\2')
-    word.gsub!(/([a-z\d])([A-Z])/,'\1_\2')
-    word.tr!("-", "_")
+    word.gsub!(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
+    word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
+    word.tr!('-', '_')
     word.downcase!
     word
   end
@@ -157,9 +161,9 @@ class DynectRest
   ##
   # Resource Records
   ##
-  %w{AAAA A CNAME DNSKEY DS KEY LOC MX NS PTR RP SOA SRV TXT}.each do |record_type|
+  %w[AAAA A CNAME DNSKEY DS KEY LOC MX NS PTR RP SOA SRV TXT].each do |record_type|
     define_method underscore(record_type) do
-      DynectRest::Resource.new(self,"#{record_type}" , @zone)
+      DynectRest::Resource.new(self, record_type.to_s, @zone)
     end
   end
 
@@ -167,15 +171,15 @@ class DynectRest
   # GSLB Service
   ##
   def gslb
-    DynectRest::GSLB.new(:dynect => self, :zone => @zone)
+    DynectRest::GSLB.new(dynect: self, zone: @zone)
   end
 
   # Raw GET request, formatted for Dyn. See list of endpoints at:
   #
   # https://manage.dynect.net/help/docs/api2/rest/resources/
   #
-  # @param [String] The partial path to GET - for example, 'User' or 'Zone'.
-  # @param [Hash] Additional HTTP headers
+  # @param path_part [String] The partial path to GET - for example, 'User' or 'Zone'.
+  # @param additional_headers [Hash] Additional HTTP headers
   def get(path_part, additional_headers = {}, &block)
     api_request { @rest[path_part].get(additional_headers, &block) }
   end
@@ -184,8 +188,8 @@ class DynectRest
   #
   # https://manage.dynect.net/help/docs/api2/rest/resources/
   #
-  # @param [String] The partial path to DELETE - for example, 'User' or 'Zone'.
-  # @param [Hash] Additional HTTP headers
+  # @param path_part [String] The partial path to DELETE - for example, 'User' or 'Zone'.
+  # @param additional_headers [Hash] Additional HTTP headers
   def delete(path_part, additional_headers = {}, &block)
     api_request { @rest[path_part].delete(additional_headers, &block) }
   end
@@ -196,9 +200,9 @@ class DynectRest
   #
   # Read the API documentation, and submit the proper data structure from here.
   #
-  # @param [String] The partial path to POST - for example, 'User' or 'Zone'.
-  # @param [Hash] The data structure to submit as the body, is automatically turned to JSON.
-  # @param [Hash] Additional HTTP headers
+  # @param path_part [String] The partial path to POST - for example, 'User' or 'Zone'.
+  # @param payload [Hash] The data structure to submit as the body, is automatically turned to JSON.
+  # @param additional_headers [Hash] Additional HTTP headers
   def post(path_part, payload, additional_headers = {}, &block)
     api_request { @rest[path_part].post(payload.to_json, additional_headers, &block) }
   end
@@ -209,9 +213,9 @@ class DynectRest
   #
   # Read the API documentation, and submit the proper data structure from here.
   #
-  # @param [String] The partial path to PUT - for example, 'User' or 'Zone'.
-  # @param [Hash] The data structure to submit as the body, is automatically turned to JSON.
-  # @param [Hash] Additional HTTP headers
+  # @param path_part [String] The partial path to PUT - for example, 'User' or 'Zone'.
+  # @param payload [Hash] The data structure to submit as the body, is automatically turned to JSON.
+  # @param additional_headers [Hash] Additional HTTP headers
   def put(path_part, payload, additional_headers = {}, &block)
     api_request { @rest[path_part].put(payload.to_json, additional_headers, &block) }
   end

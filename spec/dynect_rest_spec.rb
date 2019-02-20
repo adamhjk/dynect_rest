@@ -28,12 +28,16 @@ describe DynectRest do
 
   describe "gslb" do
     subject { dynect.gslb }
-    its(:resource_path) { should == 'GSLB/zone' }
+    it "sets the resource_path" do
+      expect(subject.resource_path).to eq ('GSLB/zone')
+    end
   end
 
   describe "key" do
     subject { dynect.key }
-    its(:resource_path) { should == 'KEYRecord/zone' }
+    it "sets the resource_path" do
+      expect(subject.resource_path).to eq ('KEYRecord/zone')
+    end
   end
 
   it "KEY Record" do
