@@ -31,7 +31,7 @@ describe 'DynectRest.Resource' do
                         msgs: [{ INFO: 'detail: Found 2 records', SOURCE: 'API-B', ERR_CD: nil, LVL: 'INFO' }] }.to_json
       fdqn_response_1 = { status: 'success',
                           data: {
-                            zone: 'sa2s.us',
+                            zone: 'test_zone',
                             ttl: 60,
                             fqdn: 'test_fqdn',
                             record_type: 'A',
@@ -42,7 +42,7 @@ describe 'DynectRest.Resource' do
                           msgs: [INFO: 'get: Found the record', SOURCE: 'API-B', ERR_CD: nil, LVL: 'INFO'] }.to_json
       fdqn_response_2 = { status: 'success',
                           data: {
-                            zone: 'sa2s.us',
+                            zone: 'test_zone',
                             ttl: 60,
                             fqdn: 'test_fqdn',
                             record_type: 'A',
@@ -81,7 +81,7 @@ describe 'DynectRest.Resource' do
                           msgs: [INFO: 'get: Found the record', SOURCE: 'API-B', ERR_CD: nil, LVL: 'INFO'] }.to_json
       fdqn_response = { status: 'success',
                         data: {
-                          zone: 'sa2s.us',
+                          zone: 'test_zone',
                           ttl: 60,
                           fqdn: 'test_fqdn',
                           record_type: 'A',
