@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.summary = 'Dynect REST API library'
   s.add_dependency 'rest-client'
   s.add_development_dependency 'rake'
-  s.add_development_dependency 'rspec', '>= 2.10.0'
+  s.add_development_dependency 'rspec', '>= 3'
   s.add_development_dependency 'yard'
 end
 
