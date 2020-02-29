@@ -14,7 +14,7 @@ GEM
       domain_name (~> 0.5)
     mime-types (2.4.3)
     netrc (0.10.3)
-    rake (10.1.0)
+    rake (13.0.1)
     rest-client (1.8.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
